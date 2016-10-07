@@ -1,22 +1,40 @@
 const getSearchResults = require('./google');
 const TextParse = require('./text-parse');
 const Pagespeed = require('./pagespeed');
+const Crawl = require('./crawl');
 
-getSearchResults('hello')
+const logResultCount = (results) => {
+  console.log(`Recieved ${results.length} results.`);
+  return results;
+};
+
+const logResult = (result) => {
+  console.log(result.hostname);
+  return result;
+};
+
+const mapPageSpeedResult = (result) => {
+  return Pagespeed.getResults(result.hostname)
+    .then( insight => Object.assign({}, result, insight) );
+};
+
+const processResult = (result) => {
+  mapPageSpeedResult( result )
+    .then( logResult );
+};
+
+// getSearchResults('hello')
+//   .then( logResultCount )
+//   .then( results => {
+//     results.forEach( processResult );
+//   });
+
+Crawl.crawlSite('http://www.sivers.org')
   .then( results => {
-    console.log(`Received ${results.length} results.`);
-    // const longDesc = results.map( result => result.description )
-    //                     .join(' ');
-
-    // const people = TextParse.findPeople(longDesc);
-    // const orgs = TextParse.findOrganizations(longDesc);
-    // const entities = TextParse.findNamedEntities(longDesc);
-
-    results.forEach( result => {
-      Pagespeed.getResults(result.url, result.title, 'mobile', true)
-        .then( () => console.log(`Pagespeed data for: ${result.url} - ${result.title}`) );
-    });
-
+    console.log( results.map( result => {
+      return {
+        page: result.page,
+        bodySize: result.body.length
+      };
+    }));
   });
-
-Pagespeed.getResults('http://news.ycombinator.com', 'mobile', true);

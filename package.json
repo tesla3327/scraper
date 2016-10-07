@@ -9,9 +9,12 @@
   "author": "Michael Thiessen",
   "license": "ISC",
   "devDependencies": {
+    "cheerio": "^0.22.0",
     "google-libphonenumber": "^2.0.2",
+    "lodash": "^4.16.4",
     "nlp_compromise": "^6.5.1",
     "node-fetch": "^1.6.3",
+    "request": "^2.75.0",
     "scrape-it": "^3.2.0"
   }
 }
